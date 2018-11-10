@@ -79,7 +79,7 @@ public class World {
             return this.posY;
         }
         
-        public ArrayList<Cell> getNeighbors() {
+        protected ArrayList<Cell> getNeighbors() {
             ArrayList<Cell> neighborList = new ArrayList<Cell>();
             
             //this.cell in top left corner of world
@@ -89,7 +89,7 @@ public class World {
                 neighborList.add(getCellAt(posX, posY + 1)); //S neighbor
      
             //this.cell on top edge of world
-            } else if((posX < width) && (posY == 0)) {
+            } else if((posX > 0) && (posX < width - 1) && (posY == 0)) {
                 neighborList.add(getCellAt(posX - 1, posY)); //W neighbor
                 neighborList.add(getCellAt(posX + 1, posY)); //E neighbor
                 neighborList.add(getCellAt(posX + 1, posY + 1)); //SE neighbor
@@ -103,7 +103,7 @@ public class World {
                 neighborList.add(getCellAt(posX - 1, posY + 1)); //SW neighbor
                 
             //this.cell on right edge of world
-            } else if((posX == width - 1) && (posY < height)) {
+            } else if((posX == width - 1) && (posY > 0) && (posY < height - 1)) {
                 neighborList.add(getCellAt(posX - 1, posY)); //W neighbor
                 neighborList.add(getCellAt(posX - 1, posY - 1)); //NW neighbor
                 neighborList.add(getCellAt(posX, posY - 1)); //N neighbor
@@ -117,7 +117,7 @@ public class World {
                 neighborList.add(getCellAt(posX, posY - 1)); //N neighbor
                 
               //this.cell on bottom edge world
-            } else if((posX <= width - 1) && (posY == height)) {
+            } else if((posX > 0) && (posX < width) && (posY == height - 1)) {
                 neighborList.add(getCellAt(posX - 1, posY)); //W neighbor
                 neighborList.add(getCellAt(posX - 1, posY - 1)); //NW neighbor
                 neighborList.add(getCellAt(posX, posY - 1)); //N neighbor
@@ -131,7 +131,7 @@ public class World {
                 neighborList.add(getCellAt(posX + 1, posY)); //E neighbor
                
             //this.cell on left edge of world
-            } else if((posX == 0) && (posY < height)) {
+            } else if((posX == 0) && (posY > 0) && (posY < height - 1)) {
                 neighborList.add(getCellAt(posX, posY - 1)); //N neighbor
                 neighborList.add(getCellAt(posX + 1, posY - 1)); //NE neighbor
                 neighborList.add(getCellAt(posX + 1, posY)); //E neighbor
@@ -152,6 +152,7 @@ public class World {
             
             return neighborList;
         }
+
     }
     
     /**
@@ -212,4 +213,14 @@ public class World {
         return this.grid[posX][posY];
     }
     
+    protected void takeTurn() {
+        for(int row = 0; row < this.height; row++) {
+            for(int col = 0; col < this.width; col++) {
+                if(getCellAt(col,row).organism != null)
+                    getCellAt(col, row).organism.process();
+              
+            }
+        }  
+    }
 }
+

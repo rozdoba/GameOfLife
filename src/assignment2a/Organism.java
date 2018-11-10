@@ -18,9 +18,9 @@ abstract class Organism {
     
     private int posY;
     
-    public Color color;
+    protected Color color;
     
-    protected int hungerLevel = 0;
+    private boolean processed;
     
     /**
      * Getter method that gets the x-coordinate of the Organism
@@ -55,5 +55,26 @@ abstract class Organism {
     protected void setColor(Color color) {
        this.color = color;
     }
+    
+    /**
+     * @return true if organism has been processed
+     */
+    protected boolean isProcessed() {
+        return processed;
+    }
+
+    /**
+     * @param set true if organism has been processed this turn
+     */
+    protected void setProcessed(boolean processed) {
+        this.processed = processed;
+    }
+    
+    public void die() {
+        //this.cell.organism.setColor(Color.WHITE);
+        this.cell.organism = null;
+    }
+    
+    protected abstract void process();
     
 }

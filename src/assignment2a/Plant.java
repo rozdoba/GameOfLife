@@ -18,4 +18,8 @@ public class Plant extends Organism implements HerbivoreEdible {
         
         this.cell = cell;
     }
+    
+    protected void process() {
+        
+    }
 }

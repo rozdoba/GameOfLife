@@ -71,8 +71,7 @@ public abstract class BoardGame {
     
     /**
      * Performs the next turn of the BoardGame
-     * @param event that triggers the next turn
      */
-    public abstract void nextTurn(ActionEvent event);
+    public abstract void nextTurn();
     
 }

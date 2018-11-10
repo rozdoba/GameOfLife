@@ -5,14 +5,22 @@ package assignment2a;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Shape;
 
 /**
  * @author Robert Ozdoba
  *
  */
 public class GameOfLife extends BoardGame {
+    
+    private EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
+        public void handle(MouseEvent event) {
+            nextTurn();
+        }
+    };
     
     public GameOfLife(int width, int height) {
         
@@ -22,7 +30,9 @@ public class GameOfLife extends BoardGame {
         
         this.pane = new GridPane();
         pane.setGridLinesVisible(true);
+        pane.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
         drawGridPane();
+        
     }
     
     /**
@@ -34,6 +44,8 @@ public class GameOfLife extends BoardGame {
             for(int col = 0; col < this.getWidth(); col++) {
                 
                 if(world.getCellAt(col, row).organism != null) {
+                    
+                    world.getCellAt(col, row).organism.setProcessed(false);
                     Circle circle = new Circle();
                     circle.setRadius(5.0);
                     circle.setFill(world.getCellAt(col, row).organism.getColor());
@@ -43,9 +55,14 @@ public class GameOfLife extends BoardGame {
         }
     }
     
-    public void nextTurn(ActionEvent event) {
-       pane.getChildren().removeAll();
-       drawGridPane();
+    public void nextTurn() {
+        pane.getChildren().clear();
+        world.takeTurn();
+        drawGridPane();
     }
+    
+    
+    
+    
 
 }

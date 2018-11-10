@@ -8,7 +8,6 @@ package assignment2a;
  *
  */
 public interface Animal {
-    void move();
     
     public void eat(World.Cell cell);
     

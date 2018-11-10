@@ -17,7 +17,7 @@ public class Main extends Application {
         
         BoardGame game = new GameOfLife(50, 50);
         
-        Scene scene = new Scene(game.pane, 500, 500);
+        Scene scene = new Scene(game.pane);
         
         stage.setTitle("Game Of Life");
         stage.setScene(scene);
