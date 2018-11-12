@@ -3,78 +3,89 @@
  */
 package assignment2a;
 
-import java.util.ArrayList;
-
 import javafx.scene.paint.Color;
 
 /**
+ * Organisms is a superclass object of Herbivore and Plant.
  * @author Robert Ozdoba
  */
 abstract class Organism {
     
+    /**
+     * Cell occupied by the organism
+     */
     protected World.Cell cell;
     
-    private int posX;
+    /**
+     * Color of the Organism's cell
+     */
+    private Color color;
     
-    private int posY;
-    
-    protected Color color;
-    
+    /**
+     * Truth value for if the Organism has been processed within the turn.
+     */
     private boolean processed;
     
     /**
-     * Getter method that gets the x-coordinate of the Organism
-     * @return posX of the Organism
+     * Constructor for the Organism.
+     * @param cell to be occupied by the Organism
      */
-    protected int getPosX() {
-        return posX;
+    public Organism(World.Cell cell) {
+        
+        this.cell = cell;
+        processed = false;
     }
 
     /**
-     * Getter method that gets the y-coordinate of the Organism
-     * @return posY of the Organism
+     * Getter method for color of the Organism.
+     * @return
      */
-    protected int getPosY() {
-        return posY;
-    }
-    
-    /**
-     * Sets the (x, y) coordinates of the Organism
-     * @param posX of the Organism
-     * @param posY of the Organism
-     */
-    protected void setCoordinates(int posX, int posY) {
-        this.posX = posX;
-        this.posY = posY;
-    }
-
     protected Color getColor() {
-        return color;
+        return this.color;
     }
     
+    /**
+     * Setter method for the color of the Organism.
+     * @param color
+     */
     protected void setColor(Color color) {
        this.color = color;
     }
     
     /**
+     * Getter method for the process value of the Organism
      * @return true if organism has been processed
      */
     protected boolean isProcessed() {
-        return processed;
+        return this.processed;
     }
 
     /**
+     * Setter Method for the process value of the Organism.
      * @param set true if organism has been processed this turn
      */
     protected void setProcessed(boolean processed) {
         this.processed = processed;
     }
     
+    /**
+     * Removes the reference to the Cell this Organism occupies.
+     */
     public void die() {
-        //this.cell.organism.setColor(Color.WHITE);
-        this.cell.organism = null;
+        this.cell.setOrganism(null);
+        this.cell = null;
+        
     }
     
+    /**
+     * Processes the Organism. Organisms are processed in different ways.
+     */
     protected abstract void process();
+    
+    /**
+     * Creates another Organism in the passed in cell.
+     * @param cell
+     */
+    protected abstract void reproduce(World.Cell cell);
     
 }

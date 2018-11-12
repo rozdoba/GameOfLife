@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 /**
+ * Driver class for the BoardGame class.
  * @author Robert Ozdoba
  * @version 1.0
  */
@@ -17,7 +18,7 @@ public class Main extends Application {
         
         BoardGame game = new GameOfLife(50, 50);
         
-        Scene scene = new Scene(game.pane);
+        Scene scene = new Scene(game.getGridPane(), 500, 500);
         
         stage.setTitle("Game Of Life");
         stage.setScene(scene);
@@ -30,6 +31,5 @@ public class Main extends Application {
         
         Application.launch();
     }
-    
     
 }

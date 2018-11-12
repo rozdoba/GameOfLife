@@ -5,27 +5,27 @@ package assignment2a;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-
 import javafx.scene.paint.Color;
 
 /**
+ * Herbivores “graze” by moving around the grid eating plants they find.
+ * Herbivores must find a plant to eat before 5 “turns” have passed or they die. Herbivores move by 
+ * checking neighboring cells and randomly picking one. They cannot move to a 
+ * neighboring cell that contains a Herbivore. They move 1 cell per turn. 
  * @author Robert Ozdoba
  * @version 1.0
  */
 public class Herbivore extends Organism implements Animal {
     
-    static final int HUNGERCAP = 5;
+    protected static final int HUNGERCAP = 5;
     
     private int hungerLevel;
     
-    public Herbivore(World.Cell cell, int posX, int posY) {
+    public Herbivore(World.Cell cell) {
         
-        setCoordinates(posX, posY);
+        super(cell);
         setColor(Color.YELLOW);
-        setProcessed(false);
         setHungerLevel(0);
-        
-        this.cell = cell;
     }
     
     /**
@@ -57,30 +57,33 @@ public class Herbivore extends Organism implements Animal {
      */
     protected void process() {
         
-        if(!isProcessed()) {
+        if(!this.isProcessed()) {
+            this.setProcessed(true);
+            this.hungerLevel++;
+            
             if(this.hungerLevel >= HUNGERCAP) {
-                die();
+                this.die();
                 return;
+                
             } else {
-                move();
-                setHungerLevel(hungerLevel++);
+                this.scoutNeighborCells();
             }
-            setProcessed(true);
         }
         
     }
-
+    
     /**
      * Removes all Cells from the ArrayList that contain Herbivore organisms.
-     * @param neighborList containing neighbor cells
-     * @return shortened neighborList devoid of Herbivore Organisms.
+     * @param neighborList containing neighboring cells
+     * @return the shortened neighborList
      */
-    ArrayList<World.Cell> shortenNeighborList(ArrayList<World.Cell> neighborList) {
+    ArrayList<World.Cell> filterAnimals(ArrayList<World.Cell> neighborList) {
         
         Iterator<World.Cell> neighborIterator = neighborList.iterator();
         
         while(neighborIterator.hasNext()) {
-            if(neighborIterator.next() instanceof Animal) {
+            World.Cell cell = neighborIterator.next();
+            if(cell.getOrganism() instanceof Animal) {
                 neighborIterator.remove();
             }
         }
@@ -88,43 +91,63 @@ public class Herbivore extends Organism implements Animal {
     }
     
     /**
-     * 
+     * Checks neighboring Cells, removing instances of other Herbivores. Then moves the 
+     * Herbivore
      */
-    public void move() {
+    public void scoutNeighborCells() {
         //get neighbor cells of current cell
-        ArrayList<World.Cell> neighborList = cell.getNeighbors();
+        ArrayList<World.Cell> neighborList = this.cell.getNeighbors();
         
         // shorten list of neighboring cells by removing all cells containing Herbivore
-        neighborList = shortenNeighborList(neighborList);
+        neighborList = filterAnimals(neighborList);
+        if(neighborList.size() == 0) {
+            return;
+        }
         
         //generate random number to choose cell from list of neighbors
         int rand = RandomGenerator.nextNumber(neighborList.size());
         World.Cell randomCell = neighborList.get(rand);
      
         //if random neighbor cell contains a Plant
-        if(randomCell.organism instanceof HerbivoreEdible) {
+        if(randomCell.getOrganism() instanceof HerbivoreEdible) {
             
             //eat it
-            eat(randomCell);
-            resetHunger();
-            setCoordinates(randomCell.getPosX(), randomCell.getPosY());
-            randomCell.organism = this;
-  
-        //else, cell is unoccupied, move freely  
+            this.eat(randomCell);
+       
         } else {
-            setCoordinates(randomCell.getPosX(), randomCell.getPosY());
-            randomCell.organism = this;
+            
+            //cell is unoccupied, move freely  
+            this.move(randomCell);
             
         }
         
-        die();
     }
     
+    /**
+     * Moves the Herbivore's location into the passed in Cell
+     * @param cell to eat
+     */
     public void eat(World.Cell cell) {
         cell.organism.die();
+        this.resetHunger();
+        this.move(cell);
     }
     
-    public void procreate() {
+    /**
+     * Moves the Herbivore's location into the passed in Cell
+     * @param cell
+     */
+    public void move(World.Cell cell) {
+        cell.setOrganism(this);
+        this.cell.setOrganism(null);
+        this.cell = cell;
+        
+    }
+    
+    /**
+     * Placeholder function for when Herbivores can reproduce.
+     */
+    protected void reproduce(World.Cell cell) {
         
     }
     

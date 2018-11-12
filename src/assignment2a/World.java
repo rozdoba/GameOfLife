@@ -5,15 +5,21 @@ package assignment2a;
 
 import java.util.ArrayList;
 
-import javafx.scene.layout.GridPane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-
 /**
+ * World of the Game Of Life that contains a grid of Column * Row Cells
+ * each of which may possibly be empty or contain an Organism. The World will generate
+ * a Herbivore 15% of the time and will generate a Plant 20% of the time. If neither 
+ * Herbivores or Plants are generated within a cell, the Cell will remain empty until
+ * a Plant seeds the cell, or until a Herbivore moves into a Cell.
  * @author Robert Ozdoba
  * @version 1.0
  */
 public class World {
+    
+    /**
+     * Value used to seen the RandomGenerator.
+     */
+    public static final int RANDOM_SEED_VALUE = 99;
     
     /**
      * Holds a 2D array of Cell objects
@@ -30,6 +36,20 @@ public class World {
      */
     private final int width;
     
+    /**
+     * @return the height
+     */
+    protected int getHeight() {
+        return height;
+    }
+
+    /**
+     * @return the width
+     */
+    protected int getWidth() {
+        return width;
+    }
+
     /**
      * Inner class of World. A cell has x and y coordinates as well as holds a 
      * reference to an Organism object that occupies the Cell.
@@ -49,7 +69,7 @@ public class World {
         /**
          * Organism which occupies the cell
          */
-        public Organism organism;
+        protected Organism organism;
         
         /**
          * Constructor for cell that takes position coordinates and 
@@ -79,6 +99,22 @@ public class World {
             return this.posY;
         }
         
+        /**
+         * Getter method that returns the Organism referenced by the Cell.
+         * @return the Organism referenced by the cell.
+         */
+        protected Organism getOrganism() {
+            return organism;
+        }
+
+        /**
+         * Setter method that sets the Organism referenced to by the Cell.
+         * @param the Organism referenced by the cell.
+         */
+        protected void setOrganism(Organism organism) {
+            this.organism = organism;
+        }
+
         protected ArrayList<Cell> getNeighbors() {
             ArrayList<Cell> neighborList = new ArrayList<Cell>();
             
@@ -156,7 +192,7 @@ public class World {
     }
     
     /**
-     * World of the 
+     * Constructor for the World
      * @param width of the World 
      * @param height of the World
      */
@@ -175,11 +211,11 @@ public class World {
      */
     private void populateWorld() {
         
-        for(int row = 0; row < this.height; row++) {
-            for(int col = 0; col < this.width; col++) {
+        for(int row = 0; row < height; row++) {
+            for(int col = 0; col < width; col++) {
                 
                 this.grid[col][row] = new Cell(col, row);
-                setOrganism(getCellAt(col, row), col, row);
+                generateOrganism(getCellAt(col, row), col, row);
             }
         }
         
@@ -193,31 +229,41 @@ public class World {
      * @param posX
      * @param posY
      */
-    private void setOrganism(Cell cell, int posX, int posY) {
+    private void generateOrganism(Cell cell, int posX, int posY) {
          
-        int rand = RandomGenerator.nextNumber(99);
+        int rand = RandomGenerator.nextNumber(RANDOM_SEED_VALUE);
         
         if(rand >= 85) {
-            cell.organism = new Herbivore(cell, posX, posY);
+            cell.setOrganism(new Herbivore(cell));
             
         } else if(rand >= 65) {
-            cell.organism = new Plant(cell, posX, posY);
+            cell.setOrganism(new Plant(cell));
             
         } else {
-            cell.organism = null;
+            cell.setOrganism(null);
         }
         
     }
     
+    /**
+     * Returns the Cell at the coordinates (posX, posY)
+     * @param posX x-axis coordinate
+     * @param posY y-axis coordinate
+     * @return Cell at the given coordinates
+     */
     public Cell getCellAt(int posX, int posY) {
         return this.grid[posX][posY];
     }
     
+    /**
+     * Processes each Cell of the World.
+     */
     protected void takeTurn() {
-        for(int row = 0; row < this.height; row++) {
-            for(int col = 0; col < this.width; col++) {
-                if(getCellAt(col,row).organism != null)
-                    getCellAt(col, row).organism.process();
+        for(int row = 0; row < height; row++) {
+            for(int col = 0; col < width; col++) {
+                
+                if(getCellAt(col, row).getOrganism() != null)
+                    getCellAt(col, row).getOrganism().process();
               
             }
         }  

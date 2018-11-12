@@ -3,12 +3,13 @@
  */
 package assignment2a;
 
-import javafx.event.ActionEvent;
 import javafx.scene.layout.GridPane;
 
 /**
+ * BoardGame which contains a reference to World and dimensions of the Board.
+ * Has a GridPane object to display the Board. 
  * @author Robert Ozdoba
- *
+ * @version 1.0
  */
 public abstract class BoardGame {
     
@@ -17,7 +18,7 @@ public abstract class BoardGame {
     /**
      * GridPane that BoardGame is displayed on
      */
-    GridPane pane;
+    protected GridPane gridPane;
     
     /**
      * Width of the board
@@ -30,13 +31,48 @@ public abstract class BoardGame {
     private int height;
     
     /**
-     * Getter method for the world
-     * @return world associated with the BoardGame
+     * Number of turns taken
+     */
+    protected int turns;
+    
+    /**
+     * Constructor for the BoardGame.
+     */
+    public BoardGame() {
+        gridPane = new GridPane();
+    }
+    /**
+     * Getter method for the World
+     * @return World associated with the BoardGame
      */
     public World getWorld() {
         return this.world;
     }
     
+    /**
+     * Setter method for the World
+     * @param World associated with the BoardGame
+     */
+    protected void setWorld(World world) {
+        this.world = world;
+    }
+
+    /**
+     * Getter method for the GridPane
+     * @return the pane
+     */
+    protected GridPane getGridPane() {
+        return gridPane;
+    }
+
+    /**
+     * Setter method for the GridPane
+     * @param pane the pane to set
+     */
+    protected void setGridPane(GridPane gridPane) {
+        this.gridPane = gridPane;
+    }
+
     /**
      * Getter method for height
      * @return height of the board
