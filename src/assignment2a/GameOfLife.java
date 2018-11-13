@@ -7,6 +7,7 @@ import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.StrokeType;
 /**
  * GameOfLife is a type of Board Game. The GameOfLife starts off with Plants and Herbivores (plant eaters) on a grid. 
  * The grid displays the plants (green) and Herbivores (yellow) by filling in the squares where they are found. 
@@ -58,6 +59,7 @@ public class GameOfLife extends BoardGame {
             for(int col = 0; col < this.getWidth(); col++) {
                 
                 Rectangle rectangle = new Rectangle(10, 10);
+                rectangle.setStrokeType(StrokeType.INSIDE);
                 rectangle.setStroke(Color.BLACK);
                 
                 if(world.getCellAt(col, row).getOrganism() != null) {
