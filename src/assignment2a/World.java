@@ -115,78 +115,29 @@ public class World {
             this.organism = organism;
         }
 
+        /**
+         * This method finds all the neighboring cells and puts them into an array list
+         * @return ArrayList<Cell> containing all neighboring cells
+         */
         protected ArrayList<Cell> getNeighbors() {
             ArrayList<Cell> neighborList = new ArrayList<Cell>();
-            
-            //this.cell in top left corner of world
-            if((posX == 0) && (posY == 0)) {
-                neighborList.add(getCellAt(posX + 1, posY)); //E neighbor
-                neighborList.add(getCellAt(posX + 1, posY + 1)); //SE neighbor
-                neighborList.add(getCellAt(posX, posY + 1)); //S neighbor
-     
-            //this.cell on top edge of world
-            } else if((posX > 0) && (posX < width - 1) && (posY == 0)) {
-                neighborList.add(getCellAt(posX - 1, posY)); //W neighbor
-                neighborList.add(getCellAt(posX + 1, posY)); //E neighbor
-                neighborList.add(getCellAt(posX + 1, posY + 1)); //SE neighbor
-                neighborList.add(getCellAt(posX, posY + 1)); //S neighbor
-                neighborList.add(getCellAt(posX - 1, posY + 1)); //SW neighbor
-                
-            //this.cell in top right corner of world
-            } else if((posX == width - 1) && (posY == 0)) {
-                neighborList.add(getCellAt(posX - 1, posY)); //W neighbor
-                neighborList.add(getCellAt(posX, posY + 1)); //S neighbor
-                neighborList.add(getCellAt(posX - 1, posY + 1)); //SW neighbor
-                
-            //this.cell on right edge of world
-            } else if((posX == width - 1) && (posY > 0) && (posY < height - 1)) {
-                neighborList.add(getCellAt(posX - 1, posY)); //W neighbor
-                neighborList.add(getCellAt(posX - 1, posY - 1)); //NW neighbor
-                neighborList.add(getCellAt(posX, posY - 1)); //N neighbor
-                neighborList.add(getCellAt(posX, posY + 1)); //S neighbor
-                neighborList.add(getCellAt(posX - 1, posY + 1)); //SW neighbor
-                
-              //this.cell in bottom right corner of world
-            } else if((posX == width - 1) && (posY == height - 1)) {
-                neighborList.add(getCellAt(posX - 1, posY)); //W neighbor
-                neighborList.add(getCellAt(posX - 1, posY - 1)); //NW neighbor
-                neighborList.add(getCellAt(posX, posY - 1)); //N neighbor
-                
-              //this.cell on bottom edge world
-            } else if((posX > 0) && (posX < width) && (posY == height - 1)) {
-                neighborList.add(getCellAt(posX - 1, posY)); //W neighbor
-                neighborList.add(getCellAt(posX - 1, posY - 1)); //NW neighbor
-                neighborList.add(getCellAt(posX, posY - 1)); //N neighbor
-                neighborList.add(getCellAt(posX + 1, posY - 1)); //NE neighbor
-                neighborList.add(getCellAt(posX + 1, posY)); //E neighbor
-              
-              //this.cell in bottom left corner of world
-            } else if((posX == 0) && (posY == height - 1)) {
-                neighborList.add(getCellAt(posX, posY - 1)); //N neighbor
-                neighborList.add(getCellAt(posX + 1, posY - 1)); //NE neighbor
-                neighborList.add(getCellAt(posX + 1, posY)); //E neighbor
-               
-            //this.cell on left edge of world
-            } else if((posX == 0) && (posY > 0) && (posY < height - 1)) {
-                neighborList.add(getCellAt(posX, posY - 1)); //N neighbor
-                neighborList.add(getCellAt(posX + 1, posY - 1)); //NE neighbor
-                neighborList.add(getCellAt(posX + 1, posY)); //E neighbor
-                neighborList.add(getCellAt(posX + 1, posY + 1)); //SE neighbor
-                neighborList.add(getCellAt(posX, posY + 1)); //S neighbor
-                
-              //this.cell in middle of world
-            } else {
-                neighborList.add(getCellAt(posX - 1, posY - 1)); //NW neighbor
-                neighborList.add(getCellAt(posX, posY - 1)); //N neighbor
-                neighborList.add(getCellAt(posX + 1, posY - 1)); //NE neighbor
-                neighborList.add(getCellAt(posX - 1, posY)); //W neighbor
-                neighborList.add(getCellAt(posX + 1, posY)); //E neighbor
-                neighborList.add(getCellAt(posX - 1, posY + 1)); //SW neighbor
-                neighborList.add(getCellAt(posX, posY + 1)); //S neighbor
-                neighborList.add(getCellAt(posX + 1, posY + 1)); //SE neighbor
+          
+            for(int row = -1; row <= 1; row++) {
+                for(int col = -1; col <= 1; col++) {
+                    if(row == 0 && col == 0) {
+                        continue; //this.cell is not a neighbor 
+                    } 
+                    
+                    if( (posX + col >= 0)
+                    &&  (posX + col < width)
+                    &&  (posY + row >= 0)
+                    &&  (posY + row < height)) {
+                        neighborList.add(getCellAt((posX + col), (posY + row)));
+                    }
+                }
             }
-            
             return neighborList;
+            
         }
 
     }
@@ -210,7 +161,7 @@ public class World {
      * at each coordinate. Cells are also assigned to reference organisms.
      */
     private void populateWorld() {
-        
+        RandomGenerator.reset();
         for(int row = 0; row < height; row++) {
             for(int col = 0; col < width; col++) {
                 
@@ -230,14 +181,19 @@ public class World {
      * @param posY
      */
     private void generateOrganism(Cell cell, int posX, int posY) {
-         
         int rand = RandomGenerator.nextNumber(RANDOM_SEED_VALUE);
         
-        if(rand >= 85) {
+        if(rand >= 80) {
             cell.setOrganism(new Herbivore(cell));
             
-        } else if(rand >= 65) {
+        } else if(rand >= 60) {
             cell.setOrganism(new Plant(cell));
+            
+        } else if(rand >= 50) {
+            cell.setOrganism(new Carnivore(cell));
+            
+        } else if(rand >= 45) {
+            cell.setOrganism(new Omnivore(cell));
             
         } else {
             cell.setOrganism(null);

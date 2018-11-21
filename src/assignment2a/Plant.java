@@ -3,8 +3,6 @@
  */
 package assignment2a;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import javafx.scene.paint.Color;
 
 /**
@@ -17,14 +15,19 @@ import javafx.scene.paint.Color;
 public class Plant extends Organism implements HerbivoreEdible {
     
     /**
-     * Number of neighboring plants to help cross pollinate.
+     * Number of neighboring Plants needed to give birth.
      */
-    public static final int CROSS_POLLENATION_NUMBER = 4;
+    public static final int MIN_MATES_TO_BIRTH = 2;
     
     /**
      * Number of neighboring empty cells required to send seed.
      */
-    public static final int SEED_NUMBER = 3;
+    public static final int MIN_EMPTY_NEIGHBORS_TO_BIRTH = 3;
+    
+    /**
+     * Number of neighboring cells containing food, needed to give birth.
+     */
+    public static final int MIN_FOOD_NEIGHBORS_TO_BIRTH = 0;
     
     /**
      * Plant constructor takes in cell
@@ -43,102 +46,22 @@ public class Plant extends Organism implements HerbivoreEdible {
      */
     protected void process() {
         
-        if(!this.isProcessed()) {
+        if(!(this.isProcessed())) {
             this.setProcessed(true);
-            this.seed();
+            this.giveBirth(MIN_MATES_TO_BIRTH, MIN_EMPTY_NEIGHBORS_TO_BIRTH, MIN_FOOD_NEIGHBORS_TO_BIRTH);
         }
-        
     }
     
-    
-    /**
-     * Removes all Cells from the ArrayList that are not Empty Cells.
-     * @param neighborList containing neighboring Cells.
-     * @return the shortened neighborList containing Empty Cells only.
-     */
-    ArrayList<World.Cell> emptyCellFilter(ArrayList<World.Cell> neighborList) {
-        
-        Iterator<World.Cell> neighborListIterator = neighborList.iterator();
-        
-        while(neighborListIterator.hasNext()) {
-            
-            World.Cell cell = neighborListIterator.next();
-            if(cell.getOrganism() != null) {
-                neighborListIterator.remove();
-            }
-        }
-        return neighborList;
+    protected boolean isEdible(Organism organism) {
+        return false;
     }
     
     /**
-     * Counts the number of neighboring Plants next to a viable empty cell
-     * @param empty cell
-     * @return number of Plant neighbors
+     * 
+     * @return
      */
-    protected int pollinatorCounter(World.Cell cell) {
-        
-        int pollinatorCount = 0;
-        
-        ArrayList<World.Cell> neighborList = cell.getNeighbors();
-        Iterator<World.Cell> neighborListIterator = neighborList.iterator();
-        
-        while(neighborListIterator.hasNext()) {
-            
-            World.Cell emptyCell = neighborListIterator.next();
-            
-            if(emptyCell.getOrganism() instanceof Plant) {
-                pollinatorCount++;
-                
-            }
-        }
-        
-        return pollinatorCount;
-    }
-    
-    
-    /**
-     * Removes all Cells from the ArrayList that are not Plant Organisms.
-     * @param neighborList containing neighboring Cells.
-     * @return shortened neighborList containing Plant Cells
-     */
-    ArrayList<World.Cell> fertileFilter(ArrayList<World.Cell> neighborList) {
-        
-        Iterator<World.Cell> neighborListIterator = neighborList.iterator();
-        
-        while(neighborListIterator.hasNext()) {
-            
-           World.Cell potentialCell = neighborListIterator.next();
-           
-           if(pollinatorCounter(potentialCell) != CROSS_POLLENATION_NUMBER) {
-               neighborListIterator.remove();
-           }
-        }
-        
-        return neighborList;
-    }
-    
-    /**
-     * Sends seeds to a random neighboring cell only if there are at least 3 empty cells
-     * to send seeds to, and there are exactly 4 other plants to help cross pollinate.
-     */
-    protected void seed() {
-        
-        ArrayList<World.Cell> neighborList = this.cell.getNeighbors();
-        neighborList = emptyCellFilter(neighborList);
-        
-        if((neighborList.size() < SEED_NUMBER)) {
-            return;
-        }
-        
-        neighborList = fertileFilter(neighborList);
-        if(neighborList.size() == 0) {
-            return;
-        }
-        
-        int rand = RandomGenerator.nextNumber(neighborList.size());
-        World.Cell randomFertileCell = neighborList.get(rand);
-        reproduce(randomFertileCell);
-             
+    protected boolean isMateable(Organism organism) {
+        return organism instanceof Plant;
     }
     
     /**

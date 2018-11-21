@@ -4,9 +4,12 @@
 package assignment2a;
 
 import javafx.scene.paint.Color;
+import java.util.ArrayList;
+import java.util.Iterator;
+
 
 /**
- * Organisms is a superclass object of Herbivore and Plant.
+ * Organism is a superclass object Animal and Plant.
  * @author Robert Ozdoba
  */
 abstract class Organism {
@@ -71,16 +74,109 @@ abstract class Organism {
     /**
      * Removes the reference to the Cell this Organism occupies.
      */
-    public void die() {
+    protected void die() {
         this.cell.setOrganism(null);
         this.cell = null;
         
     }
+
+    /**
+     * 
+     * @param neighborList
+     * @return
+     */
+    protected int countMates(ArrayList<World.Cell> neighborList) {
+        int mateCount = 0;
+        
+        for(World.Cell cell : neighborList) {
+            if(isMateable(cell.getOrganism())) {
+                mateCount++;
+            }
+        }
+        
+        return mateCount;
+    }
     
     /**
-     * Processes the Organism. Organisms are processed in different ways.
+     * 
+     * @param neighborList
+     * @return
+     */
+    protected int countEmpty(ArrayList<World.Cell> neighborList) {
+        int emptyCount = 0;
+        
+        for(World.Cell cell : neighborList) {
+            if(isEmpty(cell.getOrganism())) {
+                emptyCount++;
+            }
+        }
+        
+        return emptyCount;
+    }
+    
+    /**
+     * 
+     * @param neighborList
+     * @return
+     */
+    protected int countFood(ArrayList<World.Cell> neighborList) {
+        int foodCount = 0;
+        
+        for(World.Cell cell : neighborList) {
+            if(isEdible(cell.getOrganism())) {
+                foodCount++;
+            }
+        }
+   
+        return foodCount;
+    }
+    
+    protected void giveBirth(int numMates, int numEmptyCells, int numFoodAvailable) {
+        
+        ArrayList<World.Cell> neighborList = cell.getNeighbors();
+        
+        if(     countMates(neighborList) >= numMates && 
+                countEmpty(neighborList) >= numEmptyCells && 
+                countFood(neighborList) >= numFoodAvailable) {
+            
+            neighborList = emptyCellFilter(neighborList);
+            int rand = RandomGenerator.nextNumber(neighborList.size());
+            World.Cell randomEmptyCell = neighborList.get(rand);
+            reproduce(randomEmptyCell);
+        }
+    }
+    
+    /**
+     * Removes all Cells from the ArrayList that are not Empty Cells.
+     * @param neighborList containing neighboring Cells.
+     * @return the shortened neighborList containing Empty Cells only.
+     */
+    ArrayList<World.Cell> emptyCellFilter(ArrayList<World.Cell> neighborList) {
+        
+        Iterator<World.Cell> neighborListIterator = neighborList.iterator();
+        
+        while(neighborListIterator.hasNext()) {
+            
+            World.Cell cell = neighborListIterator.next();
+            if(!isEmpty(cell.getOrganism())) {
+                neighborListIterator.remove();
+            }
+        }
+        return neighborList;
+    }
+    
+    /**
+     * Processes the Organism for the turn. Organisms are processed in different ways.
      */
     protected abstract void process();
+    
+    protected abstract boolean isEdible(Organism organism);
+    
+    protected abstract boolean isMateable(Organism organism);
+    
+    protected boolean isEmpty(Organism organism) {
+        return organism == null;
+    }
     
     /**
      * Creates another Organism in the passed in cell.

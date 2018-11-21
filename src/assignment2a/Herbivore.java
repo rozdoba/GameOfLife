@@ -3,8 +3,6 @@
  */
 package assignment2a;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import javafx.scene.paint.Color;
 
 /**
@@ -15,133 +13,48 @@ import javafx.scene.paint.Color;
  * @author Robert Ozdoba
  * @version 1.0
  */
-public class Herbivore extends Organism implements Animal {
+public class Herbivore extends Animal implements CarnivoreEdible, OmnivoreEdible {
     
-    protected static final int HUNGERCAP = 5;
+    /**
+     * Number of neighboring Herbivores needed to give birth.
+     */
+    public static final int MIN_MATES_TO_BIRTH = 1;
     
-    private int hungerLevel;
+    /**
+     * Number of empty neighbor cell needed to give birth.
+     */
+    public static final int MIN_EMPTY_NEIGHBORS_TO_BIRTH = 2;
     
+    /**
+     * Number of neighboring cells containing food (Plants), needed to give birth.
+     */
+    public static final int MIN_FOOD_NEIGHBORS_TO_BIRTH = 2;
+    
+    /**
+     * Constructor for the Herbivore.
+     * @param cell to be occupied by the Herbivore
+     */
     public Herbivore(World.Cell cell) {
         
         super(cell);
         setColor(Color.YELLOW);
-        setHungerLevel(0);
+        setMinMatesToBirth(MIN_MATES_TO_BIRTH);
+        setMinEmptyNeighborsToBirth(MIN_EMPTY_NEIGHBORS_TO_BIRTH);
+        setMinFoodNeighborsToBirth(MIN_FOOD_NEIGHBORS_TO_BIRTH);
     }
     
     /**
-     * Getter method that returns the current hungerLevel of the Herbivore
-     * @return the hungerLevel of the Herbivore
+     * Returns true if passed in Organism is HerbivoreEdible, false otherwise.
      */
-    public int getHungerLevel() {
-        return hungerLevel;
-    }
-
-    /**
-     * Setter method for the hungerLevel of the Herbivore
-     * @param hungerLevel of the Herbivore to set
-     */
-    public void setHungerLevel(int hungerLevel) {
-        this.hungerLevel = hungerLevel;
+    protected boolean isEdible(Organism organism) {
+        return organism instanceof HerbivoreEdible;
     }
     
     /**
-     * Resets the hungerLevel back to 0. To be called whenever a Herbivore
-     * eats a Plant.
+     * Returns true if passed in Organism is a Herbivore, false otherwise
      */
-    public void resetHunger() {
-        setHungerLevel(0);
-    }
-    
-    /**
-     * Moves the Herbivore to an adjacent cell, and increases its hungerLevel
-     */
-    protected void process() {
-        
-        if(!this.isProcessed()) {
-            this.setProcessed(true);
-            this.hungerLevel++;
-            
-            if(this.hungerLevel >= HUNGERCAP) {
-                this.die();
-                return;
-                
-            } else {
-                this.scoutNeighborCells();
-            }
-        }
-        
-    }
-    
-    /**
-     * Removes all Cells from the ArrayList that contain Herbivore organisms.
-     * @param neighborList containing neighboring cells
-     * @return the shortened neighborList
-     */
-    ArrayList<World.Cell> filterAnimals(ArrayList<World.Cell> neighborList) {
-        
-        Iterator<World.Cell> neighborIterator = neighborList.iterator();
-        
-        while(neighborIterator.hasNext()) {
-            World.Cell cell = neighborIterator.next();
-            if(cell.getOrganism() instanceof Animal) {
-                neighborIterator.remove();
-            }
-        }
-        return neighborList;
-    }
-    
-    /**
-     * Checks neighboring Cells, removing instances of other Herbivores. Then moves the 
-     * Herbivore
-     */
-    public void scoutNeighborCells() {
-        //get neighbor cells of current cell
-        ArrayList<World.Cell> neighborList = this.cell.getNeighbors();
-        
-        // shorten list of neighboring cells by removing all cells containing Herbivore
-        neighborList = filterAnimals(neighborList);
-        if(neighborList.size() == 0) {
-            return;
-        }
-        
-        //generate random number to choose cell from list of neighbors
-        int rand = RandomGenerator.nextNumber(neighborList.size());
-        World.Cell randomCell = neighborList.get(rand);
-     
-        //if random neighbor cell contains a Plant
-        if(randomCell.getOrganism() instanceof HerbivoreEdible) {
-            
-            //eat it
-            this.eat(randomCell);
-       
-        } else {
-            
-            //cell is unoccupied, move freely  
-            this.move(randomCell);
-            
-        }
-        
-    }
-    
-    /**
-     * Moves the Herbivore's location into the passed in Cell
-     * @param cell to eat
-     */
-    public void eat(World.Cell cell) {
-        cell.organism.die();
-        this.resetHunger();
-        this.move(cell);
-    }
-    
-    /**
-     * Moves the Herbivore's location into the passed in Cell
-     * @param cell
-     */
-    public void move(World.Cell cell) {
-        cell.setOrganism(this);
-        this.cell.setOrganism(null);
-        this.cell = cell;
-        
+    public boolean isMateable(Organism organism) {
+        return organism instanceof Herbivore;
     }
     
     /**
@@ -149,6 +62,8 @@ public class Herbivore extends Organism implements Animal {
      */
     protected void reproduce(World.Cell cell) {
         
+        cell.setOrganism(new Herbivore(cell));
+        cell.getOrganism().setProcessed(true);
     }
     
 }
