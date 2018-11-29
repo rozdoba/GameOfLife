@@ -4,6 +4,8 @@
 package assignment2a;
 
 import javafx.scene.paint.Color;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -11,8 +13,10 @@ import java.util.Iterator;
 /**
  * Organism is a superclass object Animal and Plant.
  * @author Robert Ozdoba
+ * @version 2.0
  */
-abstract class Organism {
+@SuppressWarnings("serial")
+abstract class Organism implements Serializable {
     
     /**
      * Cell occupied by the organism
@@ -22,7 +26,7 @@ abstract class Organism {
     /**
      * Color of the Organism's cell
      */
-    private Color color;
+    private transient Color color;
     
     /**
      * Truth value for if the Organism has been processed within the turn.
@@ -141,6 +145,7 @@ abstract class Organism {
             
             neighborList = emptyCellFilter(neighborList);
             int rand = RandomGenerator.nextNumber(neighborList.size());
+            
             World.Cell randomEmptyCell = neighborList.get(rand);
             reproduce(randomEmptyCell);
         }

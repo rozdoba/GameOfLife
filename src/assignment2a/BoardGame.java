@@ -3,6 +3,8 @@
  */
 package assignment2a;
 
+import java.io.Serializable;
+
 import javafx.scene.layout.GridPane;
 
 /**
@@ -11,9 +13,7 @@ import javafx.scene.layout.GridPane;
  * @author Robert Ozdoba
  * @version 1.0
  */
-public abstract class BoardGame {
-    
-    protected World world;
+public abstract class BoardGame implements Serializable {
     
     /**
      * GridPane that BoardGame is displayed on
@@ -41,22 +41,7 @@ public abstract class BoardGame {
     public BoardGame() {
         gridPane = new GridPane();
     }
-    /**
-     * Getter method for the World
-     * @return World associated with the BoardGame
-     */
-    public World getWorld() {
-        return this.world;
-    }
     
-    /**
-     * Setter method for the World
-     * @param World associated with the BoardGame
-     */
-    protected void setWorld(World world) {
-        this.world = world;
-    }
-
     /**
      * Getter method for the GridPane
      * @return the pane

@@ -11,7 +11,7 @@ import javafx.scene.paint.Color;
  * checking neighboring cells and randomly picking one. They cannot move to a 
  * neighboring cell that contains a Herbivore. They move 1 cell per turn. 
  * @author Robert Ozdoba
- * @version 1.0
+ * @version 2.0
  */
 public class Herbivore extends Animal implements CarnivoreEdible, OmnivoreEdible {
     

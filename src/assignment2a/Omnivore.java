@@ -9,7 +9,7 @@ import javafx.scene.paint.Color;
  * Omnivores eat Herbivores, Carnivores, and Plants and can give birth if there are at least 1 other Omnivore neighbors,
  * at least 3 free neighboring cells, and 1 neighboring cells with food (Herbivores, Carnivores, Plants)
  * @author Robert Ozdoba
- * @version 1.0
+ * @version 2.0
  */
 public class Omnivore extends Animal implements CarnivoreEdible {
     

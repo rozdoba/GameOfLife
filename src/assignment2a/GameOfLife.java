@@ -22,6 +22,8 @@ import javafx.scene.shape.StrokeType;
  */
 public class GameOfLife extends BoardGame {
     
+    protected World world;
+    
     /**
      * Mouse event handler that performs the next turn of the GameOfLife whenever
      * the mouse is clicked.
@@ -48,6 +50,23 @@ public class GameOfLife extends BoardGame {
         drawGridPane();
         
     }
+    
+    /**
+     * Getter method for the World
+     * @return World associated with the BoardGame
+     */
+    public World getWorld() {
+        return this.world;
+    }
+    
+    /**
+     * Setter method for the World
+     * @param World associated with the BoardGame
+     */
+    protected void setWorld(World world) {
+        this.world = world;
+    }
+
     
     /**
      * Generates the GridPane with coloring in the Cells if the pane with different colors depending on

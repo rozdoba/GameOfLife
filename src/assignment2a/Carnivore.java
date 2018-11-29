@@ -10,7 +10,7 @@ import javafx.scene.paint.Color;
  * if there are at least 1 other Carnivore neighbor, at least 3 empty neighboring 
  * cells and at least 2 neighboring cells with food in them (Herbivores and Omnivores)
  * @author Robert Ozdoba
- * @version 1.0
+ * @version 2.0
  */
 public class Carnivore extends Animal implements OmnivoreEdible {
 

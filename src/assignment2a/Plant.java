@@ -10,7 +10,7 @@ import javafx.scene.paint.Color;
  * a random neighboring empty cell assuming that there are at least 3 empty cells 
  * to send seeds to and there are exactly 4 other plants to help cross pollinate.
  * @author Robert Ozdoba
- * @version 1.0
+ * @version 2.0
  */
 public class Plant extends Organism implements HerbivoreEdible {
     

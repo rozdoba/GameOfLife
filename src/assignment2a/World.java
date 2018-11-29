@@ -3,6 +3,7 @@
  */
 package assignment2a;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -14,7 +15,7 @@ import java.util.ArrayList;
  * @author Robert Ozdoba
  * @version 1.0
  */
-public class World {
+public class World implements Serializable {
     
     /**
      * Value used to seen the RandomGenerator.
@@ -56,7 +57,7 @@ public class World {
      * @author Robert Ozdoba
      * @version 1.0
      */
-    class Cell {
+    class Cell implements Serializable {
         
         /**
          * X coordinate of the Cell

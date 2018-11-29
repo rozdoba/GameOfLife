@@ -7,8 +7,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
+ * Abstract class that includes methods to move, eat, and choosePosition to move into for all Animals. 
+ * Contains setters to set the minimum Mates, EmptyNeighbors, and FoodNeigbors in order to give birth.
+ * as well as a getter and setter for the hungerLevel of the Animal.
  * @author Robert Ozdoba
- * @version 1.0
+ * @version 2.0
  */
 abstract class Animal extends Organism {
 
