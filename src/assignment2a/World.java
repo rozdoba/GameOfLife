@@ -9,14 +9,19 @@ import java.util.ArrayList;
 /**
  * World of the Game Of Life that contains a grid of Column * Row Cells
  * each of which may possibly be empty or contain an Organism. The World will generate
- * a Herbivore 15% of the time and will generate a Plant 20% of the time. If neither 
- * Herbivores or Plants are generated within a cell, the Cell will remain empty until
- * a Plant seeds the cell, or until a Herbivore moves into a Cell.
+ * a Herbivore 20% of the time, will generate a Plant 40% will generate a Carnivore 50% of the time 
+ * and will generate an Omnivore 55% of the time. If no Organism is generated within a cell, 
+ * the Cell will remain empty until a Plant seeds the cell, or until a Herbivore moves into a Cell.
  * @author Robert Ozdoba
- * @version 1.0
+ * @version 2.0
  */
 public class World implements Serializable {
     
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
     /**
      * Value used to seen the RandomGenerator.
      */
@@ -59,6 +64,10 @@ public class World implements Serializable {
      */
     class Cell implements Serializable {
         
+        /**
+         * 
+         */
+        private static final long serialVersionUID = 1L;
         /**
          * X coordinate of the Cell
          */

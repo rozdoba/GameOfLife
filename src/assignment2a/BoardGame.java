@@ -11,10 +11,15 @@ import javafx.scene.layout.GridPane;
  * BoardGame which contains a reference to World and dimensions of the Board.
  * Has a GridPane object to display the Board. 
  * @author Robert Ozdoba
- * @version 1.0
+ * @version 2.0
  */
 public abstract class BoardGame implements Serializable {
     
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
     /**
      * GridPane that BoardGame is displayed on
      */

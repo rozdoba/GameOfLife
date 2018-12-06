@@ -3,7 +3,6 @@
  */
 package assignment2a;
 
-import javafx.scene.paint.Color;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -15,18 +14,24 @@ import java.util.Iterator;
  * @author Robert Ozdoba
  * @version 2.0
  */
-@SuppressWarnings("serial")
 abstract class Organism implements Serializable {
     
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
     /**
      * Cell occupied by the organism
      */
     protected World.Cell cell;
     
     /**
-     * Color of the Organism's cell
+     * 
+     * Color of the Organism's cell in String format
+     *
      */
-    private transient Color color;
+    protected String colorString;
     
     /**
      * Truth value for if the Organism has been processed within the turn.
@@ -44,19 +49,17 @@ abstract class Organism implements Serializable {
     }
 
     /**
-     * Getter method for color of the Organism.
-     * @return
+     * @return the colorString
      */
-    protected Color getColor() {
-        return this.color;
+    protected String getColorString() {
+        return colorString;
     }
-    
+
     /**
-     * Setter method for the color of the Organism.
-     * @param color
+     * @param colorString the colorString to set
      */
-    protected void setColor(Color color) {
-       this.color = color;
+    protected void setColorString(String colorString) {
+        this.colorString = colorString;
     }
     
     /**

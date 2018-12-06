@@ -9,19 +9,24 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
 /**
- * GameOfLife is a type of Board Game. The GameOfLife starts off with Plants and Herbivores (plant eaters) on a grid. 
- * The grid displays the plants (green) and Herbivores (yellow) by filling in the squares where they are found. 
- * Blank squares represent empty areas. Herbivores “graze” by moving around the grid eating plants they find. 
- * Herbivores must find a plant to eat before 5 “turns” have passed or they die. A “turn” is a step in time which occurs 
- * when a user clicks anywhere on the window displaying the world. Herbivores move by checking neighboring cells
- * and randomly picking one. They cannot move to a neighboring cell that contains a Herbivore. They move 1 cell per turn. 
- * Plants do not move. Plant however will seed. Each plant will send seeds to a random neighboring empty cell assuming that 
- * there are at least 3 empty cells to send seeds to and there are exactly 4 other plants to help cross pollenate.
+ * You are going to create a simulation of a simple world. Often referred to as The game of Life (not related to the Parker Brothers board game). 
+ * The world starts off with Plants and Herbivores, Carnivores and Omnivores on a grid. 
+ * The grid displays the plants (green) and Herbivores (yellow) etc by filling in the squares where they are found. Blank squares represent empty areas. 
+ * Herbivores graze by moving around the grid eating plants they find. Herbivores must find a plant to eat before 5 turns 
+ * have passed or they die. A turn is a step in time which occurs when a user clicks anywhere on the window displaying the world. 
  * @author Robert Ozdoba
- * @version 1.0
+ * @version 2.0
  */
 public class GameOfLife extends BoardGame {
     
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * World that contains Cells which are populated with Organisms
+     */
     protected World world;
     
     /**
@@ -72,7 +77,7 @@ public class GameOfLife extends BoardGame {
      * Generates the GridPane with coloring in the Cells if the pane with different colors depending on
      * what is occupied by the current cell.
      */
-    public void drawGridPane() {
+    protected void drawGridPane() {
         
         for(int row = 0; row < this.getHeight(); row++) {
             for(int col = 0; col < this.getWidth(); col++) {
@@ -84,7 +89,7 @@ public class GameOfLife extends BoardGame {
                 if(world.getCellAt(col, row).getOrganism() != null) {
                     
                     world.getCellAt(col, row).getOrganism().setProcessed(false);
-                    rectangle.setFill(world.getCellAt(col, row).getOrganism().getColor());
+                    rectangle.setFill(Color.web(this.world.getCellAt(col, row).getOrganism().getColorString()));
                    
                 } else {
                     rectangle.setFill(Color.TRANSPARENT);
@@ -92,6 +97,14 @@ public class GameOfLife extends BoardGame {
                 getGridPane().add(rectangle, col, row);
             }
         }
+    }
+    
+    /**
+     * Loads the GridPane after opening a saved GameOfLife de-serialized file.
+     */
+    protected void loadGridPane() {
+        gridPane.getChildren().clear();
+        drawGridPane();
     }
     
     /**

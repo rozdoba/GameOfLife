@@ -3,8 +3,6 @@
  */
 package assignment2a;
 
-import javafx.scene.paint.Color;
-
 /**
  * Omnivores eat Herbivores, Carnivores, and Plants and can give birth if there are at least 1 other Omnivore neighbors,
  * at least 3 free neighboring cells, and 1 neighboring cells with food (Herbivores, Carnivores, Plants)
@@ -13,6 +11,11 @@ import javafx.scene.paint.Color;
  */
 public class Omnivore extends Animal implements CarnivoreEdible {
     
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
     /**
      * Number of neighboring Carnivore needed to give birth.
      */
@@ -34,7 +37,7 @@ public class Omnivore extends Animal implements CarnivoreEdible {
      */
     public Omnivore(World.Cell cell) {
         super(cell);
-        setColor(Color.BLUE);
+        setColorString("#0000FF");
         setMinMatesToBirth(MIN_MATES_TO_BIRTH);
         setMinEmptyNeighborsToBirth(MIN_EMPTY_NEIGHBORS_TO_BIRTH);
         setMinFoodNeighborsToBirth(MIN_FOOD_NEIGHBORS_TO_BIRTH);

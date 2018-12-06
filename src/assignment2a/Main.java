@@ -3,34 +3,30 @@
  */
 package assignment2a;
 
-import java.awt.Desktop;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.MenuBar;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.Scene;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 
+import javafx.application.Application;
+
 /**
  * Driver class for the BoardGame class.
  * @author Robert Ozdoba
- * @version 1.0
+ * @version 2.0
  */
 public class Main extends Application {
     
@@ -40,13 +36,14 @@ public class Main extends Application {
     BoardGame game;
     
     /**
-     * 
+     * FileChooser allowing for dialog boxes that enable users to search through their
+     * computer's directories for a file. 
      */
     FileChooser fileChooser;
     
     /**
-     * Method that opens a serialized BoardGame file
-     * @param file
+     * Method that opens a de-serialized BoardGame file
+     * @param file of extension .ser that holds the serialized World Object
      * @throws IOException
      */
     private void openFile(File file) throws IOException {
@@ -68,7 +65,7 @@ public class Main extends Application {
     
     /**
      * Method that saves a BoardGame at the particular step of turns.
-     * @param file
+     * @param file of extension .ser that will hold the serialized World Object
      * @throws IOException
      */
     private void saveFile(File file) throws IOException {
@@ -86,7 +83,7 @@ public class Main extends Application {
     }
     
     /**
-     * 
+     * Start method to begin the BoardGame.
      */
     public void start(Stage stage) {
         
@@ -97,6 +94,9 @@ public class Main extends Application {
         MenuItem open = new MenuItem("Open");
         open.setOnAction(new EventHandler<ActionEvent>() {
             
+            /**
+             * Handles opening a .ser file holding the World Object for GameOfLife
+             */
             public void handle(ActionEvent event) {
                 
                 fileChooser = new FileChooser();
@@ -111,6 +111,7 @@ public class Main extends Application {
                         System.out.println(ex.getMessage());
                     }
                     
+                    ((GameOfLife)game).loadGridPane();
                 }
             }
         });
@@ -118,6 +119,9 @@ public class Main extends Application {
         MenuItem save = new MenuItem("Save");
         save.setOnAction(new EventHandler<ActionEvent>() {
             
+            /**
+             * Handles saving a .ser file holding the World Object for GameOfLife
+             */
             public void handle(ActionEvent event) {
                 fileChooser = new FileChooser();
                 fileChooser.setTitle("Save Game File");
@@ -149,7 +153,7 @@ public class Main extends Application {
     }
     
     /**
-     * 
+     * Main entry point of the program.
      * @param arg
      */
     public static void main(String arg[]) {

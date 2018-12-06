@@ -3,8 +3,6 @@
  */
 package assignment2a;
 
-import javafx.scene.paint.Color;
-
 /**
  * Plants do not move. Plant however will seed. Each plant will send seeds to 
  * a random neighboring empty cell assuming that there are at least 3 empty cells 
@@ -14,6 +12,11 @@ import javafx.scene.paint.Color;
  */
 public class Plant extends Organism implements HerbivoreEdible {
     
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
     /**
      * Number of neighboring Plants needed to give birth.
      */
@@ -38,7 +41,7 @@ public class Plant extends Organism implements HerbivoreEdible {
     public Plant(World.Cell cell) {
         
         super(cell);
-        setColor(Color.GREEN);
+        setColorString("#008000");
     }
     
     /**

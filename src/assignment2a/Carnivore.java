@@ -3,8 +3,6 @@
  */
 package assignment2a;
 
-import javafx.scene.paint.Color;
-
 /**
  * Carnivores are able to eat Herbivores and Omnivores. Carnivores can give birth
  * if there are at least 1 other Carnivore neighbor, at least 3 empty neighboring 
@@ -13,6 +11,11 @@ import javafx.scene.paint.Color;
  * @version 2.0
  */
 public class Carnivore extends Animal implements OmnivoreEdible {
+
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
 
     /**
      * Number of neighboring Carnivore needed to give birth.
@@ -35,7 +38,7 @@ public class Carnivore extends Animal implements OmnivoreEdible {
      */
     public Carnivore(World.Cell cell) {
         super(cell);
-        setColor(Color.RED);
+        setColorString("#FF0000");
         setMinMatesToBirth(MIN_MATES_TO_BIRTH);
         setMinEmptyNeighborsToBirth(MIN_EMPTY_NEIGHBORS_TO_BIRTH);
         setMinFoodNeighborsToBirth(MIN_FOOD_NEIGHBORS_TO_BIRTH);

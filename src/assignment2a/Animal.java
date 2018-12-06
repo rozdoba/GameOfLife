@@ -15,6 +15,14 @@ import java.util.Iterator;
  */
 abstract class Animal extends Organism {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * The maximum number of turns an Organism can go without eating food before it dies.
+     */
     public static final int HUNGERCAP = 5;
     
     /**
@@ -22,14 +30,24 @@ abstract class Animal extends Organism {
      */
     private int hungerLevel;
     
+    /**
+     * The minimum number of neighboring Cells containing mate-able Organisms for this Organism to giveBirth()
+     */
     private int minMatesToBirth;
     
+    /**
+     * The minimum number of neighboring empty Cells for this Organism to giveBirth()
+     */
     private int minEmptyNeighborsToBirth;
     
+    /**
+     * The minimum number of neighboring Cells containing edible Organisms for this Organism to giveBirth()
+     */
     private int minFoodNeighborsToBirth;
     
     /**
-     * @param cell
+     * Constructor method for Animal.
+     * @param cell containing this Animal
      */
     public Animal(World.Cell cell) {
         super(cell);
@@ -91,6 +109,11 @@ abstract class Animal extends Organism {
         this.minFoodNeighborsToBirth = minFoodNeighborsToBirth;
     }
 
+    /**
+     * Checks if this Organism has already made a turn (been processed). If not, increases hungerLevel by 1 and checks
+     * to see if the Organism has reached its hunger cap in which case it dies. The Organism gives birth and chooses a move
+     * position.
+     */
     protected void process() {
         
         if(!this.isProcessed()) {
@@ -104,54 +127,102 @@ abstract class Animal extends Organism {
             }
             
             giveBirth(minMatesToBirth, minEmptyNeighborsToBirth, minFoodNeighborsToBirth);
-            choosePosition();
+            chooseMovePosition();
+            
         }
     }
     
     /**
-     * Removes all Cells from the ArrayList that contain Herbivore organisms.
-     * @param neighborList containing neighboring cells
-     * @return the shortened neighborList
+     * Filters the ArrayList of Cells for organisms that are edible by the organism calling this function.
+     * @param neighborList containing neighboring Cells
+     * @return the shortened neighborlist containing only edible organisms
      */
-    ArrayList<World.Cell> moveableCellFilter(ArrayList<World.Cell> neighborList) {
+    protected ArrayList<World.Cell> foodFilter(ArrayList<World.Cell> neighborList) {
         
-        Iterator<World.Cell> neighborIterator = neighborList.iterator();
+        Iterator<World.Cell> edibleListIterator = neighborList.iterator();
         
-        while(neighborIterator.hasNext()) {
-            World.Cell cell = neighborIterator.next();
+        while(edibleListIterator.hasNext()) {
             
-            if(isEmpty(cell.getOrganism())) {
-                continue;
-            }
-            
-            if(!isEdible(cell.getOrganism())) { 
-                    neighborIterator.remove();
+               World.Cell cell = edibleListIterator.next();
+               if(isEmpty(cell.getOrganism()) || !isEdible(cell.getOrganism())) {
+                   edibleListIterator.remove();
             }
         }
         
         return neighborList;
+        
     }
     
-    protected void choosePosition() {
-        ArrayList<World.Cell> neighborList = cell.getNeighbors();
-        neighborList = moveableCellFilter(neighborList);
+    /**
+     * Filters the ArrayList of Cells for Cells that this organism can move into. Moveable cells are cells that
+     * are empty or Cells that contain an edible Organism
+     * @param neighborList containing neighboring Cells
+     * @return the shortened neighborlist containing only moveable Cells
+     */
+    protected ArrayList<World.Cell> moveableCellFilter(ArrayList<World.Cell> neighborList) {
         
-        if(neighborList.size() == 0) {
-            return;
+        Iterator<World.Cell> movableListIterator = neighborList.iterator();
+        
+        while(movableListIterator.hasNext()) {
+            
+               World.Cell cell = movableListIterator.next();
+               
+               if(isEmpty(cell.getOrganism())) {
+                   continue;
+               }
+               
+               if(!isEdible(cell.getOrganism())) {
+                   movableListIterator.remove();
+            }
         }
         
-        int rand = RandomGenerator.nextNumber(neighborList.size());
-        World.Cell randomCell = neighborList.get(rand);
+        return neighborList;
+        
+    }
+    
+    /**
+     * Checks to see if this Organism has neighboring Cells containing edible Organisms, and eats a random neighboring edible Organism
+     * @return true if the neighboring Cells contain at-least 1 Cell with an edible Organism, false otherwise
+     */
+    protected boolean prioritizeFood() {
+        
+        ArrayList<World.Cell> edibleNeighborList = cell.getNeighbors();
+        edibleNeighborList = foodFilter(edibleNeighborList);
+        
+        if(edibleNeighborList.size() == 0) {
+            return false;
+        }
+        
+        int rand = RandomGenerator.nextNumber(edibleNeighborList.size());
+        World.Cell randomCell = edibleNeighborList.get(rand);
+        this.eat(randomCell);
+        return true;
+    }
+    
+    
+    /**
+     * Checks to see if this Organism has neighboring Cells containing empty or edible Organisms. Eats a random neighboring edible Organism
+     * or moves into a random neighboring empty cell.
+     */
+    protected void chooseMovePosition() {
+        
+        ArrayList<World.Cell> moveableNeighborList = cell.getNeighbors();
+        moveableNeighborList = moveableCellFilter(moveableNeighborList);
+        
+        if(moveableNeighborList.size() == 0) {
+            return;
+        }
+             
+        int rand = RandomGenerator.nextNumber(moveableNeighborList.size());
+        World.Cell randomCell = moveableNeighborList.get(rand);
         
         if(isEdible(randomCell.getOrganism())) {
             this.eat(randomCell);
-            
-        } 
+        }
         
         if(isEmpty(randomCell.getOrganism())) {
             this.move(randomCell);
         }
-        
     }
     
     /**
